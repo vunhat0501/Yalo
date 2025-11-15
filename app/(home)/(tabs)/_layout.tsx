@@ -7,7 +7,7 @@ export default function TabsNavigator() {
       <Tabs.Screen
         name="home"
         options={{
-          title: 'Home',
+          title: 'Chats',
           tabBarIcon: ({ size, color }) => (
             <FontAwesome5 name="home" size={size} color={color} />
           ),
