@@ -28,6 +28,7 @@ export default function ChatProvider({ children }: PropsWithChildren) {
 
     connect();
 
+    //* Disconnect user (close WebSocket) when the component is unmount
     return () => {
       client.disconnectUser();
       setIsReady(false);
