@@ -1,7 +1,8 @@
+import Avatar from '@/components/Avatar';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/providers/AuthProvide';
 import { useEffect, useState } from 'react';
-import { Alert, StyleSheet, View } from 'react-native';
+import { Alert, ScrollView, StyleSheet, View } from 'react-native';
 import { Button, TextInput } from 'react-native-paper';
 
 export default function ProfileScreen() {
@@ -85,7 +86,22 @@ export default function ProfileScreen() {
   }
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
+      <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+        <Avatar
+          size={200}
+          url={avatarUrl}
+          onUpload={(url: string) => {
+            setAvatarUrl(url);
+            updateProfile({
+              username,
+              website,
+              avatar_url: url,
+              full_name: fullname,
+            });
+          }}
+        />
+      </View>
       <View style={[styles.verticallySpaced, styles.mt20]}>
         <TextInput label="Email" value={session?.user?.email} disabled />
       </View>
@@ -133,7 +149,7 @@ export default function ProfileScreen() {
           Sign Out
         </Button>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
