@@ -16,13 +16,15 @@ export default function ChatProvider({ children }: PropsWithChildren) {
       return;
     }
     const connect = async () => {
+      const avatarPath = profile.avatar_url || 'default-avatar.png';
+      const imageUrl = supabase.storage.from('avatars').getPublicUrl(avatarPath)
+        .data.publicUrl;
+
       await client.connectUser(
         {
           id: profile.id,
           name: profile.full_name,
-          image: supabase.storage
-            .from('avatars')
-            .getPublicUrl(profile.avatar_url).data.publicUrl,
+          image: imageUrl,
         },
         client.devToken(profile.id)
       );

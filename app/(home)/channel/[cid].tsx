@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { ActivityIndicator } from 'react-native';
 import { Channel as ChannelType } from 'stream-chat';
 import {
+  AttachButton,
   Channel,
   MessageInput,
   MessageList,
@@ -31,7 +32,7 @@ export default function ChannelScreen() {
   }
 
   return (
-    <Channel channel={channel}>
+    <Channel channel={channel} AttachButton={AttachButton}>
       <MessageList />
       <MessageInput />
     </Channel>
