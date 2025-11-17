@@ -9,7 +9,7 @@ export default function RootLayout() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <PaperProvider>
         <AuthProvider>
-          <Slot />;
+          <Slot />
         </AuthProvider>
       </PaperProvider>
     </GestureHandlerRootView>

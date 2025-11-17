@@ -15,34 +15,35 @@ export default function ChatProvider({ children }: PropsWithChildren) {
     if (!profile) {
       return;
     }
+
     const connect = async () => {
+      //** Ensure any previous connection is closed before starting a new one
+      await client.disconnectUser();
+
       const avatarPath = profile.avatar_url || 'default-avatar.png';
       const imageUrl = supabase.storage.from('avatars').getPublicUrl(avatarPath)
         .data.publicUrl;
 
-      await client.connectUser(
-        {
-          id: profile.id,
-          name: profile.full_name,
-          image: imageUrl,
-        },
-        client.devToken(profile.id)
-      );
-      setIsReady(true);
-
-      // const channel = client.channel('messaging', 'the_park', {
-      //   name: 'The Park',
-      // });
-      // await channel.watch();
+      try {
+        await client.connectUser(
+          {
+            id: profile.id,
+            name: profile.full_name,
+            image: imageUrl,
+          },
+          client.devToken(profile.id)
+        );
+        setIsReady(true);
+      } catch (error) {
+        return;
+      }
     };
 
     connect();
 
-    //* Disconnect user (close WebSocket) when the component is unmount
     return () => {
-      if (isReady) {
-        client.disconnectUser();
-      }
+      //** Ensures cleanup happens even if the connection was still "pending"
+      client.disconnectUser();
       setIsReady(false);
     };
   }, [profile?.id]);
