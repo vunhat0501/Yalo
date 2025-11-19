@@ -19,6 +19,30 @@
    - Chạy lệnh `npx expo start -c` để build lại bundle
    - Từ các lần sau có thể chạy `npm start` như bình thường
 
+## Local database supabase
+
+1. Cài đặt Docker
+   - [Docker](https://www.docker.com/products/docker-desktop/)
+   - [Docker Docs](https://docs.docker.com/)
+
+2. CLI chạy supabase
+   Note: Có thể tự tải [Supabase CLI](https://supabase.com/docs/reference/cli/introduction) hoặc chạy lệnh bằng npx.
+   <!-- Hiện tại CLI của supabase v2.58 đang lỗi nên tạm thời dùng Beta (có thể xem ở Issue ở dưới) -->
+   - Start db: `npx supabase start`
+   - Pulling db: `npx supabase db pull` (chỉ chạy nếu database thay đổi và nên báo cho team leader trước khi pull)
+   - Stop db: `npx supabase stop --no-backup`
+   - Nếu trong quá trình chạy gặp lỗi dạng `failed to create docker container: Error response from daemon: Conflict. The container name "/supabase_vector_Yalo" is already in use by container "chuỗi rất dài". You have to remove (or rename) that container to be able to reuse that name.` thì có thể chạy lại lệnh stop ở trên và rồi start lại.
+   - Nếu vẫn không được thì có thể kiểm tra bằng `docker ps -a --filter "name=supabase_" -q | ForEach-Object { docker rm -f $_ }` xem docker đã được dọn hay chưa
+
+3. Lưu ý nên dọn Docker sau ghi hết dự án hoặc máy hết dung lượng
+   - Check mức độ sử dụng: `docker  system df`
+   - Xóa images: `docker images prune -a -f`
+   - Xóa containers: `docker container prune -f`
+
+## Lỗi có thể gặp khi chạy dự án
+
+- Error: Migration iceberg-catalog-ids not found [Cli Issue #4466](https://github.com/supabase/cli/issues/4466)
+
 ## Các tài liệu có sử dụng
 
 - Trang icon sử dụng trong app [expo/vector-icons](https://icons.expo.fyi/Index)
