@@ -63,7 +63,8 @@
           "cameraPermission": "$(PRODUCT_NAME) would like to use your camera to share image in a message.",
           "photosPermission": "$(PRODUCT_NAME) would like to use your device gallery to attach image in a message."
         }
-      ]
+      ],
+      "expo-video"
     ],
     "experiments": {
       "typedRoutes": true,
