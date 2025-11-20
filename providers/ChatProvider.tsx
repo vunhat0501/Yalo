@@ -1,5 +1,6 @@
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/providers/AuthProvide';
+import { tokenProvider } from '@/utils/tokenProvider';
 import { PropsWithChildren, useEffect, useState } from 'react';
 import { ActivityIndicator } from 'react-native';
 import { StreamChat } from 'stream-chat';
@@ -31,7 +32,7 @@ export default function ChatProvider({ children }: PropsWithChildren) {
             name: profile.full_name,
             image: imageUrl,
           },
-          client.devToken(profile.id)
+          tokenProvider
         );
         setIsReady(true);
       } catch (error) {

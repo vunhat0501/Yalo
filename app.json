@@ -36,7 +36,8 @@
         "android.permission.READ_MEDIA_AUDIO",
         "android.permission.READ_MEDIA_IMAGES"
       ],
-      "package": "com.anonymous.Yalo"
+      "package": "com.anonymous.Yalo",
+      "softwareKeyboardLayoutMode": "resize"
     },
     "web": {
       "output": "static",

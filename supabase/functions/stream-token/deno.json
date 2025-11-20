@@ -1,0 +1,13 @@
+{
+  "nodeModulesDir": "auto",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxFactory": "h",
+    "jsxFragmentFactory": "Fragment"
+  },
+  "imports": {
+    "shared/": "../_shared/",
+    "supabase-js": "jsr:@supabase/supabase-js@2",
+    "stream-chat": "npm:stream-chat@^8.60.0"
+  }
+}

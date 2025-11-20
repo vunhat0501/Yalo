@@ -25,16 +25,25 @@
    - [Docker](https://www.docker.com/products/docker-desktop/)
    - [Docker Docs](https://docs.docker.com/)
 
-2. CLI chạy supabase
+2. Cài đặt Deno (do supabase local sử dụng)
+   - [Deno](https://docs.deno.com/runtime/getting_started/installation/)
+   - Nếu như phải import thư viện của npm vào các phần chạy Deno (vd như thư mục của supabase):
+     - Bước 1: thêm thư viện muốn sử dụng vào deno.json theo dạng `"lib": "npm:lib@^version"`
+     - Bước 2: chạy lệnh theo cú pháp `deno cache --reload supabase/functions/stream-token/index.ts` (đường dẫn thay đổi tùy thuộc vào file import)
+     - Bước 3: Xóa file deno.lock (do phiên bản của Deno hiện tại khác với supabase dùng)
+
+3. CLI chạy supabase
    Note: Có thể tự tải [Supabase CLI](https://supabase.com/docs/reference/cli/introduction) hoặc chạy lệnh bằng npx.
    <!-- Hiện tại CLI của supabase v2.58 đang lỗi nên tạm thời dùng Beta (có thể xem ở Issue ở dưới) -->
-   - Start db: `npx supabase start`
+   - Login: `npx supabase login`
+   - Link: `npx supabase link --project-ref ref --debug` thay ref bằng id thực
+   - Start db: `npx supabase start` (nhớ xóa file supabase/.temp/storage-migration trước khi chạy. Mỗi lần link lại supabase thì phải xóa file này nếu muốn chạy)
    - Pulling db: `npx supabase db pull` (chỉ chạy nếu database thay đổi và nên báo cho team leader trước khi pull)
    - Stop db: `npx supabase stop --no-backup`
    - Nếu trong quá trình chạy gặp lỗi dạng `failed to create docker container: Error response from daemon: Conflict. The container name "/supabase_vector_Yalo" is already in use by container "chuỗi rất dài". You have to remove (or rename) that container to be able to reuse that name.` thì có thể chạy lại lệnh stop ở trên và rồi start lại.
    - Nếu vẫn không được thì có thể kiểm tra bằng `docker ps -a --filter "name=supabase_" -q | ForEach-Object { docker rm -f $_ }` xem docker đã được dọn hay chưa
 
-3. Lưu ý nên dọn Docker sau ghi hết dự án hoặc máy hết dung lượng
+4. Lưu ý nên dọn Docker sau ghi hết dự án hoặc máy hết dung lượng
    - Check mức độ sử dụng: `docker  system df`
    - Xóa images: `docker images prune -a -f`
    - Xóa containers: `docker container prune -f`
