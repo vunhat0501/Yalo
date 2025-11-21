@@ -31,6 +31,7 @@
      - Bước 1: thêm thư viện muốn sử dụng vào deno.json theo dạng `"lib": "npm:lib@^version"`
      - Bước 2: chạy lệnh theo cú pháp `deno cache --reload supabase/functions/stream-token/index.ts` (đường dẫn thay đổi tùy thuộc vào file import)
      - Bước 3: Xóa file deno.lock (do phiên bản của Deno hiện tại khác với supabase dùng)
+     - Bước 4 (có thể xuất hiện): lỗi không nhận thư viện "npm". Ấn tổ hợp ctrl + shift + P, gõ lệnh `Deno: Restart language server` và `Deno: Reload import registries cache`
 
 3. CLI chạy supabase
    Note: Có thể tự tải [Supabase CLI](https://supabase.com/docs/reference/cli/introduction) hoặc chạy lệnh bằng npx.
