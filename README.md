@@ -58,3 +58,13 @@
 - Getstream [Getstream](https://getstream.io/)
 - Stream chat SDK [Chat Messaging React Native](https://getstream.io/chat/docs/sdk/react-native/)
 - Supabase docs [Supabase](https://supabase.com/docs)
+
+
+23/11/2025
+- npx expo install @stream-io/video-react-native-sdk : SDK chứa thành phần UI, Hook và hàm cho phép gọi thoại
+- npx expo install @stream-io/react-native-webrtc : mô đun WebRTC cho React Native tạo kết nối giữa máy chủ và người dùng để dữ liệu như video hay âm thanh có thể được truyền đi
+- npx expo install @config-plugins/react-native-webrtc : (xem trên)
+- npx expo install react-native-incall-manager : xử lý các tuyến truyền/cảm biến/sự kiện trong suốt cuộc gọi âm thanh hoặc video.
+- npx expo install react-native-svg : cung cấp SVG cho React Native, các thành phần SVRN và biểu tượng phụ thuộc vào dependency này
+- npx expo install @react-native-community/netinfo : xử lý phát hiện trạng thái kết nối mạng của thiết bị và kiểu và chất lượng của kết nối ấy
+- npx expo install @notifee/react-native : duy trì cuộc gọi khi ứng dụng chạy trong nền trên Android

@@ -1,6 +1,6 @@
 import { useAuth } from '@/providers/AuthProvide';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
-import { Link, router, Stack } from 'expo-router';
+import { Link, Redirect, router, Stack } from 'expo-router';
 import { ActivityIndicator } from 'react-native-paper';
 import { ChannelList } from 'stream-chat-react-native';
 
@@ -13,6 +13,8 @@ export default function MainTabScreen() {
 
   return (
     <>
+      {/* {Delete later} */}
+      <Redirect href={'/(home)/call'} />
       <Stack.Screen
         options={{
           headerRight: () => (
