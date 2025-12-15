@@ -60,8 +60,8 @@
 - Stream chat SDK [Chat Messaging React Native](https://getstream.io/chat/docs/sdk/react-native/)
 - Supabase docs [Supabase](https://supabase.com/docs)
 
-
 23/11/2025
+
 - npx expo install @stream-io/video-react-native-sdk : SDK chứa thành phần UI, Hook và hàm cho phép gọi thoại
 - npx expo install @stream-io/react-native-webrtc : mô đun WebRTC cho React Native tạo kết nối giữa máy chủ và người dùng để dữ liệu như video hay âm thanh có thể được truyền đi
 - npx expo install @config-plugins/react-native-webrtc : (xem trên)
