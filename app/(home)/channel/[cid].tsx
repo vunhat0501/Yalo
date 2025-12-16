@@ -1,12 +1,14 @@
 import { router, Stack, useLocalSearchParams } from 'expo-router';
-import React from 'react';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+
+import Zocial from '@expo/vector-icons/Zocial';
+import { useStreamVideoClient } from '@stream-io/video-react-native-sdk';
+import * as Crypton from "expo-crypto";
 import {
   ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
-  View,
-  Text
+  View
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Channel as ChannelType } from 'stream-chat';
@@ -17,9 +19,6 @@ import {
   MessageList,
   useChatContext,
 } from 'stream-chat-react-native';
-import Zocial from '@expo/vector-icons/Zocial';
-import { useStreamVideoClient } from '@stream-io/video-react-native-sdk';
-import * as Crypton from "expo-crypto";
 export default function ChannelScreen() {
   //* fetch and store complete channel id
   const [channel, setChannel] = useState<ChannelType | null>();
@@ -34,13 +33,14 @@ export default function ChannelScreen() {
     const members = Object.values(channel.state.members).map((member) => ({ user_id: member.user_id}))
     // console.log(members)
     
-    const call = videoClient.call('default', Crypton.randomUUID());
+    const call = videoClient.call('default', Crypton.randomUUID().toLowerCase());
     await call.getOrCreate({
+      ring: true,
       data: {
         members,
       },
-    })
-    router.push('/call');
+    });
+    // router.push(`/call/${call.id}`);
   };
   useEffect(() => {
     const fetchChannel = async () => {

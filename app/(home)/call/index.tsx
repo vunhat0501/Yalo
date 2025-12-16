@@ -1,17 +1,48 @@
 import {
+  Call,
     CallContent,
+    RingingCallContent,
     StreamCall,
+    useCalls,
     useStreamVideoClient,
 } from "@stream-io/video-react-native-sdk";
-
-const callId = 'my-call-id';
-export default function callScreen() {
-  const client = useStreamVideoClient();
-  const call = client.call('default', callId);
-  call.join({ create: true });
+import { Redirect, router, useLocalSearchParams } from "expo-router";
+import React from "react";
+import { useEffect, useState } from "react";
+import { ActivityIndicator } from "react-native";
+export default function CallScreen() {
+  const {id} = useLocalSearchParams<{id: string}>();
+  
+  const calls = useCalls();
+  const call = calls[0];
+  // const [call, setCall] = useState<Call>();
+  // const client = useStreamVideoClient();
+  // useEffect(() => {
+  //   const fetchCall = async() => {
+  //     const call = client.call('default', id);
+  //     console.log(call.state)
+  //     await call.get();
+  //     setCall(call);
+  //   };
+  //   fetchCall();
+  //   return () => {
+  //     if (call) {
+  //       call.leave();
+  //     }
+  //   };
+  // }, [id]);
+  
+  if (!call) {
+    if (router.canGoBack) {
+      router.back();
+    } else {
+      router.push('/');
+    }
+    return null;
+  }
   return (
       <StreamCall call={call}>
-        <CallContent/>
+        <RingingCallContent/>
       </StreamCall>
   );
 }
