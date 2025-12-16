@@ -1,6 +1,7 @@
 import { useAuth } from '@/providers/AuthProvide';
 import CallProvider from '@/providers/CallProvider';
 import ChatProvider from '@/providers/ChatProvider';
+import NotificationProvider from '@/providers/NotificationProvider';
 import VideoProvider from '@/providers/VideoProvide';
 import { Redirect, Stack } from 'expo-router';
 import React from 'react';
@@ -14,14 +15,15 @@ export default function HomeLayout() {
 
   return (
     <ChatProvider>
-      <VideoProvider>
-        <CallProvider>
-      <Stack>
-
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      </Stack>
-      </CallProvider>
-      </VideoProvider>
+      <NotificationProvider>
+        <VideoProvider>
+          <CallProvider>
+            <Stack>
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            </Stack>
+          </CallProvider>
+        </VideoProvider>
+      </NotificationProvider>
     </ChatProvider>
   );
 }
