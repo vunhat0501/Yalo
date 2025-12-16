@@ -10,7 +10,7 @@ export default function CallProvider({ children }: PropsWithChildren) {
   const {top } = useSafeAreaInsets();
   const segments = useSegments();
 
-  const isOnCallScreen = segments[1] == 'call';
+  const isOnCallScreen = segments[1] === 'call';
 
   useEffect(() => {
     if (!call) {
