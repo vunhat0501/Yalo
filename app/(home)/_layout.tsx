@@ -1,6 +1,7 @@
 import { useAuth } from '@/providers/AuthProvide';
 import CallProvider from '@/providers/CallProvider';
 import ChatProvider from '@/providers/ChatProvider';
+import NotificationProvider from '@/providers/NotificationProvider';
 import VideoProvider from '@/providers/VideoProvide';
 import { CallingState, useCalls } from '@stream-io/video-react-native-sdk';
 import { Redirect, router, Stack } from 'expo-router';
@@ -36,16 +37,15 @@ export default function HomeLayout() {
 
   return (
     <ChatProvider>
-      <VideoProvider>
-        {/* 2. Place the listener INSIDE VideoProvider */}
-        <IncomingCallListener />
-        
-        <CallProvider>
-          <Stack>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          </Stack>
-        </CallProvider>
-      </VideoProvider>
+      <NotificationProvider>
+        <VideoProvider>
+          <CallProvider>
+            <Stack>
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            </Stack>
+          </CallProvider>
+        </VideoProvider>
+      </NotificationProvider>
     </ChatProvider>
   );
 }
