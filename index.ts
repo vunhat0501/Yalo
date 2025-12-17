@@ -8,13 +8,17 @@ import { tokenProvider } from "./utils/tokenProvider";
 messaging().setBackgroundMessageHandler(async (remoteMessage) => {
   console.log("Remote message: ", JSON.stringify(remoteMessage, null, 2));
 
-  const { data } = await supabase.auth.getSession();
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session?.user) {
+    console.log("Error: no active auth session");
+    return;
+  }
 
   const client = StreamChat.getInstance(process.env.EXPO_PUBLIC_API_KEY!);
 
   client._setToken(
     {
-      id: data.session.user.id,
+      id: session!.user.id,
     },
     tokenProvider,
   );
@@ -35,7 +39,7 @@ messaging().setBackgroundMessageHandler(async (remoteMessage) => {
   };
 
   await notifee.displayNotification({
-    title: `New message from ${message.message.user.name}`,
+    title: "Tin nhắn mới từ " + message.message.user?.name,
     body: message.message.text,
     data,
     android: {
