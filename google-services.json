@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "778979676778",
+    "project_id": "yalo-31a57",
+    "storage_bucket": "yalo-31a57.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:778979676778:android:a4094c71a83acd4187f013",
+        "android_client_info": {
+          "package_name": "com.anonymous.Yalo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCRCGWPlf8dnpA8xe5b5ZMxMV0gs6qbx0g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
