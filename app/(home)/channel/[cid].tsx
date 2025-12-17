@@ -29,27 +29,41 @@ export default function ChannelScreen() {
   const videoClient = useStreamVideoClient();
   const { bottom } = useSafeAreaInsets();
 
-  const joinCall = async () => {
-    // console.log(JSON.stringify(Object.values(channel?.state.members), null, 2));
-    const members = Object.values(channel.state.members).map(member => ({
-      user_id: member.user_id,
-    }));
-    // console.log(members)
+  // ChannelScreen.tsx
 
-    const callId = Crypton.randomUUID().toLowerCase(); // Use a simple UUID or generate one
+const joinCall = async () => {
+    const currentUserId = client.userID;
+    
+    // Debug: In ra để xem ID có khớp không
+    console.log("My ID:", currentUserId);
+
+    const members = Object.values(channel.state.members)
+        .filter(member => {
+            // So sánh lỏng (==) đề phòng trường hợp 1 bên là số, 1 bên là chuỗi
+            const isMe = member.user_id == currentUserId; 
+            return !isMe;
+        })
+        .map(member => ({
+            user_id: member.user_id,
+        }));
+
+    console.log("Members to ring:", JSON.stringify(members)); // <--- Kiểm tra log này. Nếu array rỗng hoặc không có ID của bạn là đúng.
+
+    const callId = Crypton.randomUUID().toLowerCase();
     const call = videoClient.call('default', callId);
 
     await call.getOrCreate({
-      ring: true,
-      data: {
-        members,
-      },
+        ring: true,
+        data: {
+            members, 
+        },
     });
+    
     router.push({
-      pathname: `/call`,
-      params: { id: callId },
+        pathname: `/call`,
+        params: { id: callId },
     });
-  };
+};
 
   useEffect(() => {
     const fetchChannel = async () => {
