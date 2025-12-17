@@ -1,6 +1,7 @@
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/providers/AuthProvide';
 import { tokenProvider } from '@/utils/tokenProvider';
+import React from 'react';
 import { PropsWithChildren, useEffect, useState } from 'react';
 import { ActivityIndicator } from 'react-native';
 import { StreamChat } from 'stream-chat';
