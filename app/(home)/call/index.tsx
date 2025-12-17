@@ -1,27 +1,95 @@
+// CallScreen.tsx
 import {
-    CallContent,
-    StreamCall,
-    StreamVideo,
-    StreamVideoClient,
-    User,
-} from "@stream-io/video-react-native-sdk";
+  Call,
+  CallContent,
+  CallingState,
+  StreamCall,
+  useStreamVideoClient,
+} from '@stream-io/video-react-native-sdk';
+import { router, useLocalSearchParams } from 'expo-router';
+import React, { useEffect, useRef, useState } from 'react';
+import { ActivityIndicator, Text, View, Alert } from 'react-native';
 
-const apiKey = process.env.EXPO_PUBLIC_API_KEY;
-const userId = 'f4d1d685-a37f-442b-b8e9-5f37c67e5ebb';
-const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiZjRkMWQ2ODUtYTM3Zi00NDJiLWI4ZTktNWYzN2M2N2U1ZWJiIn0.4ZWpiMSQJkPD3kDPN-IqC0CAYtf0iXnGkg7MMFPB0Go';
-const callId = 'my-call-id';
-const user: User = { id: userId };
+export default function CallScreen() {
+  const { id } = useLocalSearchParams<{ id: string }>();
+  const [call, setCall] = useState<Call | null>(null);
+  const client = useStreamVideoClient();
 
-const client = new StreamVideoClient({ apiKey, user, token });
-const call = client.call('default', callId);
-call.join({ create: true });
+  const isJoiningRef = useRef(false);
 
-export default function callScreen() {
+  useEffect(() => {
+    if (!client || !id || isJoiningRef.current) return;
+
+    isJoiningRef.current = true;
+    const _call = client.call('default', id);
+
+    const joinCall = async () => {
+      try {
+        await _call.join({ create: true });
+        setCall(_call);
+      } catch (e: any) {
+        console.log('Error joining call:', e);
+        if (
+          e.message?.includes('already joined') ||
+          _call.state.callingState === CallingState.JOINED
+        ) {
+          setCall(_call);
+        } else {
+            // Optional: Handle fatal errors (e.g. navigate back)
+            Alert.alert("Error", "Could not join call");
+            router.back();
+        }
+      }
+    };
+
+    joinCall();
+
+    return () => {
+       // Cleanup if necessary
+    };
+  }, [client, id]);
+
+  // --- NEW: Listen for when the call ends remotely ---
+  useEffect(() => {
+    if (!call) return;
+
+    // This event fires when SOMEONE ELSE executes .endCall()
+    const unsubscribe = call.on('call.ended', () => {
+        console.log('The call was ended by the other user.');
+        setCall(null);
+        router.back();
+    });
+
+    return () => {
+        unsubscribe();
+    };
+  }, [call]);
+
+  if (!call) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" />
+        <Text>Joining Call...</Text>
+      </View>
+    );
+  }
+
   return (
-    <StreamVideo client={client}>
-      <StreamCall call={call}>
-        <CallContent/>
-      </StreamCall>
-    </StreamVideo>
+    <StreamCall call={call}>
+      <CallContent
+        onHangupCallHandler={async () => {
+            // --- UPDATED: Logic to end call for everyone ---
+            try {
+                // endCall() stops the session for ALL participants
+                await call.endCall(); 
+            } catch (e) {
+                console.error("Failed to end call for everyone, leaving instead:", e);
+                // Fallback: If user doesn't have permission to end, just leave
+                await call.leave();
+            }
+            router.back();
+        }}
+      />
+    </StreamCall>
   );
 }

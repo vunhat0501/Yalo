@@ -20,11 +20,6 @@ export default function ChatProvider({ children }: PropsWithChildren) {
     const connect = async () => {
       //** Ensure any previous connection is closed before starting a new one
 
-      console.log(profile.id);
-      console.log(await tokenProvider());
-
-      console.log(await tokenProvider());
-
       await client.disconnectUser();
 
       const avatarPath = profile.avatar_url || 'default-avatar.png';
