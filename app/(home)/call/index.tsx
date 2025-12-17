@@ -7,49 +7,63 @@ import {
   useStreamVideoClient,
 } from '@stream-io/video-react-native-sdk';
 import { router, useLocalSearchParams } from 'expo-router';
-import React, { useEffect, useState, useRef } from 'react'; // <--- Thêm useRef
-import { ActivityIndicator, Text, View } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { ActivityIndicator, Text, View, Alert } from 'react-native';
 
 export default function CallScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const [call, setCall] = useState<Call | null>(null);
   const client = useStreamVideoClient();
-  
-  // Dùng ref để đánh dấu đã join hay chưa (tránh React Strict Mode chạy 2 lần)
+
   const isJoiningRef = useRef(false);
 
   useEffect(() => {
-    if (!client || !id || isJoiningRef.current) return; // <--- Nếu đã join rồi thì return luôn
+    if (!client || !id || isJoiningRef.current) return;
 
-    // Đánh dấu đang xử lý
     isJoiningRef.current = true;
-
-    // Tạo object call (Stream SDK sẽ tự trả về instance cũ nếu đã có)
     const _call = client.call('default', id);
-    
-    // Join cuộc gọi
+
     const joinCall = async () => {
-        try {
-            await _call.join({ create: true });
-            setCall(_call); // Chỉ set state khi join thành công hoặc đã có object
-        } catch (e) {
-            console.log('Error joining call:', e);
-            // Nếu lỗi do đã join rồi thì vẫn set call để hiển thị
-            if (e.message?.includes('already joined') || _call.state.callingState === CallingState.JOINED) {
-                 setCall(_call);
-            }
+      try {
+        await _call.join({ create: true });
+        setCall(_call);
+      } catch (e: any) {
+        console.log('Error joining call:', e);
+        if (
+          e.message?.includes('already joined') ||
+          _call.state.callingState === CallingState.JOINED
+        ) {
+          setCall(_call);
+        } else {
+            // Optional: Handle fatal errors (e.g. navigate back)
+            Alert.alert("Error", "Could not join call");
+            router.back();
         }
+      }
     };
 
     joinCall();
 
-    // Cleanup function: Rời cuộc gọi khi component bị hủy (unmount)
     return () => {
-        // Tùy chọn: Nếu bạn muốn thoát call khi back ra, hãy bỏ comment dòng dưới
-        // _call.leave(); 
+       // Cleanup if necessary
     };
-
   }, [client, id]);
+
+  // --- NEW: Listen for when the call ends remotely ---
+  useEffect(() => {
+    if (!call) return;
+
+    // This event fires when SOMEONE ELSE executes .endCall()
+    const unsubscribe = call.on('call.ended', () => {
+        console.log('The call was ended by the other user.');
+        setCall(null);
+        router.back();
+    });
+
+    return () => {
+        unsubscribe();
+    };
+  }, [call]);
 
   if (!call) {
     return (
@@ -63,9 +77,17 @@ export default function CallScreen() {
   return (
     <StreamCall call={call}>
       <CallContent
-        onHangupCallHandler={() => {
-          call.leave();
-          router.back();
+        onHangupCallHandler={async () => {
+            // --- UPDATED: Logic to end call for everyone ---
+            try {
+                // endCall() stops the session for ALL participants
+                await call.endCall(); 
+            } catch (e) {
+                console.error("Failed to end call for everyone, leaving instead:", e);
+                // Fallback: If user doesn't have permission to end, just leave
+                await call.leave();
+            }
+            router.back();
         }}
       />
     </StreamCall>
